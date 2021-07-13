@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
 
 void main() {
   runApp(const MyApp());
@@ -47,8 +48,16 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
   int _counter = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    WidgetsBinding.instance?.addObserver(this);
+    super.initState();
+
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -59,6 +68,13 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+  }
+
+  @override
+  void didChangeMetrics() {
+    MediaQueryData data = MediaQueryData.fromWindow(ui.window);
+
+    print('screen_height : ${data.size.height}');
   }
 
   @override
@@ -95,12 +111,19 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            const TextField(
+              obscureText: true,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: '2. Click me to pop up keyboard',
+              ),
             ),
+            SizedBox(height: 50,),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              '3. Filter log with keyword "screen_height"',
+              style: TextStyle(
+                fontSize: 16
+              ),
             ),
           ],
         ),
